@@ -154,6 +154,44 @@ func TestTaskManager_List(t *testing.T) {
 	}
 }
 
+func TestTaskManager_Kill(t *testing.T) {
+	tm := NewTaskManage(5)
+
+	p1, _ := start("echo", ">>>>> t1")
+	mp1 := MProcess{Process: p1, Priority: 3}
+	p2, _ := start("echo", ">>>>> t2")
+	mp2 := MProcess{Process: p2, Priority: 2}
+	p3, _ := start("echo", ">>>>> t3")
+	mp3 := MProcess{Process: p3, Priority: 3}
+	p4, _ := start("echo", ">>>>> t4")
+	mp4 := MProcess{Process: p4, Priority: 2}
+	p5, _ := start("echo", ">>>>> t5")
+	mp5 := MProcess{Process: p5, Priority: 1}
+
+	tm.AddFIFO(mp1)
+	tm.AddFIFO(mp2)
+	tm.AddFIFO(mp3)
+	tm.AddFIFO(mp4)
+	tm.AddFIFO(mp5)
+
+	tt := []mTest{
+		{process: mp1, list: []*MProcess{&mp2, &mp3, &mp4, &mp5}},
+		{process: mp2, list: []*MProcess{&mp3, &mp4, &mp5}},
+		{process: mp3, list: []*MProcess{&mp4, &mp5}},
+		{process: mp4, list: []*MProcess{&mp5}},
+		{process: mp5, list: []*MProcess{}},
+	}
+	for _, test := range tt {
+		testName := fmt.Sprintf("%s", test.sort)
+		t.Run(testName, func(t *testing.T) {
+			_ = tm.Kill(test.process)
+			if !check(test.list, tm.ProcessList) {
+				t.Errorf("got %v, want %v", tm.ProcessList, test.list)
+			}
+		})
+	}
+}
+
 func check(l1 []*MProcess, l2 []*MProcess) bool {
 	fmt.Println("*****", len(l1), len(l2))
 	if len(l1) != len(l2) {
