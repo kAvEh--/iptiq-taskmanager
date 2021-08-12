@@ -12,6 +12,7 @@ type MProcess struct {
 }
 
 type TaskManager struct {
+	MaxCapacity int
 	ProcessList []*MProcess
 }
 

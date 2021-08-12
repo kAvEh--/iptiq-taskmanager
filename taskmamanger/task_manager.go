@@ -7,8 +7,12 @@ import (
 	"time"
 )
 
-func NewTaskManage() *TaskManager {
+func NewTaskManage(capacity int) *TaskManager {
+	if capacity < 1 || capacity > 10000 {
+		capacity = 10
+	}
 	return &TaskManager{
+		MaxCapacity: capacity,
 		ProcessList: make([]*MProcess, 0),
 	}
 
