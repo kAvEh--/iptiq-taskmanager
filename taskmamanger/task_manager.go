@@ -29,8 +29,10 @@ func (tm *TaskManager) List(sorting string) []*MProcess {
 	switch sorting {
 	case "priority":
 		sort.Sort(ByPriority(tm.ProcessList))
-	case "medium":
-	case "high":
+	case "id":
+		sort.Sort(ByID(tm.ProcessList))
+	case "time":
+		sort.Sort(ByTime(tm.ProcessList))
 	}
 	return tm.ProcessList
 }

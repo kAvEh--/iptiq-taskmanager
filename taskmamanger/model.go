@@ -41,3 +41,19 @@ func (s ByPriority) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s ByPriority) Less(i, j int) bool {
 	return s[i].Priority < s[j].Priority
 }
+
+type ByTime []*MProcess
+
+func (s ByTime) Len() int      { return len(s) }
+func (s ByTime) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s ByTime) Less(i, j int) bool {
+	return s[i].time.Unix() < s[j].time.Unix()
+}
+
+type ByID []*MProcess
+
+func (s ByID) Len() int      { return len(s) }
+func (s ByID) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s ByID) Less(i, j int) bool {
+	return s[i].Process.Pid < s[j].Process.Pid
+}
