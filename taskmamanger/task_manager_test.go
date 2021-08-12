@@ -50,6 +50,32 @@ func TestTaskManager_Add(t *testing.T) {
 	}
 }
 
+func TestTaskManager_AddFIFO(t *testing.T) {
+	tm := NewTaskManage(2)
+
+	p1, _ := start("echo", ">>>>> t1")
+	mp1 := MProcess{Process: p1, Priority: 1}
+	p2, _ := start("echo", ">>>>> t2")
+	mp2 := MProcess{Process: p2, Priority: 2}
+	p3, _ := start("echo", ">>>>> t3")
+	mp3 := MProcess{Process: p3, Priority: 3}
+
+	tt := []mTest{
+		{process: mp1, list: []*MProcess{&mp1}},
+		{process: mp2, list: []*MProcess{&mp1, &mp2}},
+		{process: mp3, list: []*MProcess{&mp2, &mp3}},
+	}
+	for _, test := range tt {
+		testName := fmt.Sprintf("%d", test.process.Process.Pid)
+		t.Run(testName, func(t *testing.T) {
+			tm.AddFIFO(test.process)
+			if !check(test.list, tm.ProcessList) {
+				t.Errorf("got %v, want %v", tm.ProcessList, test.list)
+			}
+		})
+	}
+}
+
 func check(l1 []*MProcess, l2 []*MProcess) bool {
 	fmt.Println("*****", len(l1), len(l2))
 	if len(l1) != len(l2) {
