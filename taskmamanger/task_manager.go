@@ -1,6 +1,7 @@
 package taskmamanger
 
 import (
+	"fmt"
 	"sort"
 	"time"
 )
@@ -41,6 +42,13 @@ func (tm *TaskManager) Kill(process MProcess) error {
 	err := process.Process.Kill()
 	if err != nil {
 		return err
+	}
+	for i := 0; i < len(tm.ProcessList); i++ {
+		if tm.ProcessList[i].Process.Pid == process.Process.Pid {
+			tm.ProcessList = append(tm.ProcessList[:i], tm.ProcessList[i+1:]...)
+			fmt.Println("process deleted.")
+			return nil
+		}
 	}
 
 	return nil

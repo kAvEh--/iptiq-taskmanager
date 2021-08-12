@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/kAvEh--/iptiq-taskmanager/taskmamanger"
 	"os"
 	"os/exec"
@@ -43,6 +44,10 @@ func main() {
 
 	time.Sleep(time.Second * 2)
 	tm.Kill(mp1)
+	e := tm.Kill(mp1)
+	if e != nil {
+		fmt.Println(e)
+	}
 }
 
 func start(args ...string) (p *os.Process, err error) {
