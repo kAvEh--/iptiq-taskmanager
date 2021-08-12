@@ -8,17 +8,18 @@ import (
 type MProcess struct {
 	Process  *os.Process
 	Priority PriorityType
-	Time     time.Time
+	time     time.Time
 }
 
 type TaskManager struct {
+	ProcessList []*MProcess
 }
 
 type ITaskManager interface {
 	Add(process MProcess)
 	AddFIFO(process MProcess)
 	AddPriority(process MProcess)
-	List(sort int)
+	List(sorting string) []*MProcess
 	Kill(process MProcess)
 	KillByPriority(priority PriorityType)
 	KillAll()
@@ -31,4 +32,12 @@ func (p PriorityType) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+type ByPriority []*MProcess
+
+func (s ByPriority) Len() int      { return len(s) }
+func (s ByPriority) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s ByPriority) Less(i, j int) bool {
+	return s[i].Priority < s[j].Priority
 }
