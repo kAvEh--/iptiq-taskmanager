@@ -29,7 +29,13 @@ func (tm *TaskManager) Add(process MProcess) error {
 }
 
 func (tm *TaskManager) AddFIFO(process MProcess) {
-
+	if len(tm.ProcessList) >= tm.MaxCapacity {
+		sort.Sort(ByTime(tm.ProcessList))
+		tm.ProcessList[0].Process.Kill()
+		tm.ProcessList = tm.ProcessList[1:]
+	}
+	process.time = time.Now()
+	tm.ProcessList = append(tm.ProcessList, &process)
 }
 
 func (tm *TaskManager) AddPriority(process MProcess) {
