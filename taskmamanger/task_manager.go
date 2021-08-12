@@ -37,8 +37,13 @@ func (tm *TaskManager) List(sorting string) []*MProcess {
 	return tm.ProcessList
 }
 
-func (tm *TaskManager) Kill(process MProcess) {
+func (tm *TaskManager) Kill(process MProcess) error {
+	err := process.Process.Kill()
+	if err != nil {
+		return err
+	}
 
+	return nil
 }
 
 func (tm *TaskManager) KillByPriority(priority PriorityType) {

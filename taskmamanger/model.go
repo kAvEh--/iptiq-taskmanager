@@ -20,7 +20,7 @@ type ITaskManager interface {
 	AddFIFO(process MProcess)
 	AddPriority(process MProcess)
 	List(sorting string) []*MProcess
-	Kill(process MProcess)
+	Kill(process MProcess) error
 	KillByPriority(priority PriorityType)
 	KillAll()
 }
