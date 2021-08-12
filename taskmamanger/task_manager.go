@@ -1,6 +1,7 @@
 package taskmamanger
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"time"
@@ -46,7 +47,7 @@ func (tm *TaskManager) Kill(process MProcess) error {
 	for i := 0; i < len(tm.ProcessList); i++ {
 		if tm.ProcessList[i].Process.Pid == process.Process.Pid {
 			tm.ProcessList = append(tm.ProcessList[:i], tm.ProcessList[i+1:]...)
-			fmt.Println("process deleted.")
+			fmt.Println("process deleted")
 			return nil
 		}
 	}
@@ -54,10 +55,24 @@ func (tm *TaskManager) Kill(process MProcess) error {
 	return nil
 }
 
-func (tm *TaskManager) KillByPriority(priority PriorityType) {
-
+func (tm *TaskManager) KillByPriority(priority PriorityType) error {
+	if !priority.IsValid() {
+		return errors.New("priority is invalid")
+	}
+	for i := 0; i < len(tm.ProcessList); i++ {
+		if tm.ProcessList[i].Priority == priority {
+			err := tm.ProcessList[i].Process.Kill()
+			if err != nil {
+				return err
+			}
+			tm.ProcessList = append(tm.ProcessList[:i], tm.ProcessList[i+1:]...)
+		}
+	}
+	fmt.Println("priority deleted")
+	return nil
 }
 
-func (tm *TaskManager) KillAll() {
+func (tm *TaskManager) KillAll() error {
 
+	return nil
 }

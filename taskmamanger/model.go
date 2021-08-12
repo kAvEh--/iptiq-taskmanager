@@ -21,8 +21,8 @@ type ITaskManager interface {
 	AddPriority(process MProcess)
 	List(sorting string) []*MProcess
 	Kill(process MProcess) error
-	KillByPriority(priority PriorityType)
-	KillAll()
+	KillByPriority(priority PriorityType) error
+	KillAll() error
 }
 
 type PriorityType int
