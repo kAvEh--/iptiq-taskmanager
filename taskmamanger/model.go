@@ -40,6 +40,9 @@ type ByPriority []*MProcess
 func (s ByPriority) Len() int      { return len(s) }
 func (s ByPriority) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s ByPriority) Less(i, j int) bool {
+	if s[i].Priority == s[j].Priority {
+		return s[i].time.UnixNano() < s[j].time.UnixNano()
+	}
 	return s[i].Priority < s[j].Priority
 }
 
@@ -48,7 +51,7 @@ type ByTime []*MProcess
 func (s ByTime) Len() int      { return len(s) }
 func (s ByTime) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s ByTime) Less(i, j int) bool {
-	return s[i].time.Unix() < s[j].time.Unix()
+	return s[i].time.UnixNano() < s[j].time.UnixNano()
 }
 
 type ByID []*MProcess

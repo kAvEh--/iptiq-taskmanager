@@ -12,6 +12,7 @@ type mTest struct {
 	process MProcess
 	list    []*MProcess
 	error   error
+	sort    string
 }
 
 func TestTaskManager_Add(t *testing.T) {
@@ -113,6 +114,41 @@ func TestTaskManager_AddPriority(t *testing.T) {
 				if !check(test.list, tm.ProcessList) {
 					t.Errorf("got %v, want %v", tm.ProcessList, test.list)
 				}
+			}
+		})
+	}
+}
+
+func TestTaskManager_List(t *testing.T) {
+	tm := NewTaskManage(5)
+
+	p1, _ := start("echo", ">>>>> t1")
+	mp1 := MProcess{Process: p1, Priority: 3}
+	p2, _ := start("echo", ">>>>> t2")
+	mp2 := MProcess{Process: p2, Priority: 2}
+	p3, _ := start("echo", ">>>>> t3")
+	mp3 := MProcess{Process: p3, Priority: 3}
+	p4, _ := start("echo", ">>>>> t4")
+	mp4 := MProcess{Process: p4, Priority: 2}
+	p5, _ := start("echo", ">>>>> t5")
+	mp5 := MProcess{Process: p5, Priority: 1}
+
+	tm.AddFIFO(mp1)
+	tm.AddFIFO(mp2)
+	tm.AddFIFO(mp3)
+	tm.AddFIFO(mp4)
+	tm.AddFIFO(mp5)
+
+	tt := []mTest{
+		{sort: "priority", list: []*MProcess{&mp5, &mp2, &mp4, &mp1, &mp3}},
+		{sort: "time", list: []*MProcess{&mp1, &mp2, &mp3, &mp4, &mp5}},
+	}
+	for _, test := range tt {
+		testName := fmt.Sprintf("%s", test.sort)
+		t.Run(testName, func(t *testing.T) {
+			tmp := tm.List(test.sort)
+			if !check(test.list, tmp) {
+				t.Errorf("got %v, want %v", tm.ProcessList, test.list)
 			}
 		})
 	}
