@@ -46,7 +46,7 @@ func (tm *TaskManager) AddPriority(process MProcess) error {
 			if tm.ProcessList[i].Priority < tm.ProcessList[indicator].Priority {
 				indicator = i
 			} else if tm.ProcessList[i].Priority == tm.ProcessList[indicator].Priority {
-				if tm.ProcessList[i].time.Unix() == tm.ProcessList[indicator].time.Unix() {
+				if tm.ProcessList[i].time.UnixNano() == tm.ProcessList[indicator].time.UnixNano() {
 					indicator = i
 				}
 			}
