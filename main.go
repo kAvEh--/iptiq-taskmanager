@@ -29,31 +29,6 @@ func main() {
 	if e != nil {
 		fmt.Println(e)
 	}
-	//tmp := tm.List("priority")
-	//for i := 0; i < len(tmp); i++ {
-	//	fmt.Println(tmp[i].Process.Pid, tmp[i].Priority)
-	//}
-	//
-	//tmp = tm.List("id")
-	//for i := 0; i < len(tmp); i++ {
-	//	fmt.Println(tmp[i].Process.Pid, tmp[i].Process.Pid)
-	//}
-	//
-	//tmp = tm.List("time")
-	//for i := 0; i < len(tmp); i++ {
-	//	fmt.Println(tmp[i].Process.Pid, tmp[i].Priority)
-	//}
-
-	//time.Sleep(time.Second * 2)
-	//tm.KillAll()
-	//e = tm.KillByPriority(1)
-	//if e != nil {
-	//	fmt.Println(e)
-	//}
-	//e = tm.Kill(mp1)
-	//if e != nil {
-	//	fmt.Println(e)
-	//}
 }
 
 func start(args ...string) (p *os.Process, err error) {
