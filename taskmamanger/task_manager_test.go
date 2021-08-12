@@ -229,6 +229,43 @@ func TestTaskManager_KillByPriority(t *testing.T) {
 	}
 }
 
+func TestTaskManager_KillAll(t *testing.T) {
+	tm := NewTaskManage(5)
+
+	p1, _ := start("echo", ">>>>> t1")
+	p2, _ := start("echo", ">>>>> t2")
+	p3, _ := start("echo", ">>>>> t3")
+	p4, _ := start("echo", ">>>>> t4")
+	p5, _ := start("echo", ">>>>> t5")
+	mp1 := MProcess{Process: p1, Priority: 3}
+	mp2 := MProcess{Process: p2, Priority: 2}
+	mp3 := MProcess{Process: p3, Priority: 3}
+	mp4 := MProcess{Process: p4, Priority: 2}
+	mp5 := MProcess{Process: p5, Priority: 1}
+
+	tm.AddFIFO(mp1)
+	tm.AddFIFO(mp2)
+	tm.AddFIFO(mp3)
+	tm.AddFIFO(mp4)
+	tm.AddFIFO(mp5)
+
+	tt := []mTest{
+		{error: nil},
+	}
+	for _, test := range tt {
+		testName := fmt.Sprintf("%d", test.priority)
+		t.Run(testName, func(t *testing.T) {
+			err := tm.KillAll()
+			if err != nil {
+				t.Errorf("got error %s", err.Error())
+			}
+			if !check(test.list, tm.ProcessList) {
+				t.Errorf("got %v, want %v", tm.ProcessList, test.list)
+			}
+		})
+	}
+}
+
 func check(l1 []*MProcess, l2 []*MProcess) bool {
 	fmt.Println("*****", len(l1), len(l2))
 	if len(l1) != len(l2) {
