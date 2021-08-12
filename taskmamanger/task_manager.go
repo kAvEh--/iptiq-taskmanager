@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+//NewTaskManage create new TaskManager with passed capacity and return a reference to it
 func NewTaskManage(capacity int) *TaskManager {
 	if capacity < 1 || capacity > 10000 {
 		capacity = 10
@@ -18,6 +19,8 @@ func NewTaskManage(capacity int) *TaskManager {
 
 }
 
+//Add function to add passed process to TaskManager list
+//return error if maximum capacity reached
 func (tm *TaskManager) Add(process MProcess) error {
 	if len(tm.ProcessList) >= tm.MaxCapacity {
 		return errors.New("maximum capacity reached")
@@ -28,6 +31,8 @@ func (tm *TaskManager) Add(process MProcess) error {
 	return nil
 }
 
+//AddFIFO function will add process to TaskManager list
+//if maximum capacity reached delete first added process and then add passed one
 func (tm *TaskManager) AddFIFO(process MProcess) {
 	if len(tm.ProcessList) >= tm.MaxCapacity {
 		sort.Sort(ByTime(tm.ProcessList))
@@ -41,6 +46,9 @@ func (tm *TaskManager) AddFIFO(process MProcess) {
 	tm.ProcessList = append(tm.ProcessList, &process)
 }
 
+//AddPriority function will add process to TaskManager list
+//if maximum capacity reached delete the lowest priority process and then add passed one
+//if not exist any lower process will return error
 func (tm *TaskManager) AddPriority(process MProcess) error {
 	process.time = time.Now()
 	if len(tm.ProcessList) >= tm.MaxCapacity {
@@ -65,6 +73,8 @@ func (tm *TaskManager) AddPriority(process MProcess) error {
 	return nil
 }
 
+//List will return list of process by passes sorting order
+//sorting will be one of `priority`, `id` or `time`
 func (tm *TaskManager) List(sorting string) []*MProcess {
 	switch sorting {
 	case "priority":
@@ -77,6 +87,7 @@ func (tm *TaskManager) List(sorting string) []*MProcess {
 	return tm.ProcessList
 }
 
+//Kill will terminate passed process and remove from TaskManager list
 func (tm *TaskManager) Kill(process MProcess) error {
 	err := process.Process.Kill()
 	if err != nil {
@@ -93,6 +104,7 @@ func (tm *TaskManager) Kill(process MProcess) error {
 	return nil
 }
 
+//KillByPriority will terminate all processes with passed priority and remove them from TaskManager list
 func (tm *TaskManager) KillByPriority(priority PriorityType) error {
 	if !priority.IsValid() {
 		return errors.New("priority is invalid")
@@ -112,6 +124,7 @@ func (tm *TaskManager) KillByPriority(priority PriorityType) error {
 	return nil
 }
 
+//KillAll will kill all processes in TaskManager list
 func (tm *TaskManager) KillAll() error {
 	for i := 0; i < len(tm.ProcessList); i++ {
 		err := tm.ProcessList[i].Process.Kill()

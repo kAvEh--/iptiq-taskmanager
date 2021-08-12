@@ -5,17 +5,20 @@ import (
 	"time"
 )
 
+// MProcess represent an os Process with priority and creation time
 type MProcess struct {
 	Process  *os.Process
 	Priority PriorityType
 	time     time.Time
 }
 
+//TaskManager represent a list of tasks and maximum capacity of list
 type TaskManager struct {
 	MaxCapacity int
 	ProcessList []*MProcess
 }
 
+//ITaskManager consists of all functions that must be implemented by Task Manager
 type ITaskManager interface {
 	Add(process MProcess) error
 	AddFIFO(process MProcess)
@@ -26,6 +29,7 @@ type ITaskManager interface {
 	KillAll() error
 }
 
+//PriorityType is an Int with validation function
 type PriorityType int
 
 func (p PriorityType) IsValid() bool {
