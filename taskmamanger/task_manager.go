@@ -86,6 +86,7 @@ func (tm *TaskManager) Kill(process MProcess) error {
 		if tm.ProcessList[i].Process.Pid == process.Process.Pid {
 			tm.ProcessList = append(tm.ProcessList[:i], tm.ProcessList[i+1:]...)
 			fmt.Println("process deleted")
+			return nil
 		}
 	}
 
@@ -96,13 +97,15 @@ func (tm *TaskManager) KillByPriority(priority PriorityType) error {
 	if !priority.IsValid() {
 		return errors.New("priority is invalid")
 	}
-	for i := 0; i < len(tm.ProcessList); i++ {
+	for i := 0; i < len(tm.ProcessList); {
 		if tm.ProcessList[i].Priority == priority {
 			err := tm.ProcessList[i].Process.Kill()
 			if err != nil {
 				return err
 			}
 			tm.ProcessList = append(tm.ProcessList[:i], tm.ProcessList[i+1:]...)
+		} else {
+			i++
 		}
 	}
 	fmt.Println("priority deleted")

@@ -9,10 +9,11 @@ import (
 )
 
 type mTest struct {
-	process MProcess
-	list    []*MProcess
-	error   error
-	sort    string
+	process  MProcess
+	list     []*MProcess
+	error    error
+	sort     string
+	priority int
 }
 
 func TestTaskManager_Add(t *testing.T) {
@@ -185,6 +186,42 @@ func TestTaskManager_Kill(t *testing.T) {
 		testName := fmt.Sprintf("%s", test.sort)
 		t.Run(testName, func(t *testing.T) {
 			_ = tm.Kill(test.process)
+			if !check(test.list, tm.ProcessList) {
+				t.Errorf("got %v, want %v", tm.ProcessList, test.list)
+			}
+		})
+	}
+}
+
+func TestTaskManager_KillByPriority(t *testing.T) {
+	tm := NewTaskManage(5)
+
+	p1, _ := start("echo", ">>>>> t1")
+	p2, _ := start("echo", ">>>>> t2")
+	p3, _ := start("echo", ">>>>> t3")
+	p4, _ := start("echo", ">>>>> t4")
+	p5, _ := start("echo", ">>>>> t5")
+	mp1 := MProcess{Process: p1, Priority: 3}
+	mp2 := MProcess{Process: p2, Priority: 2}
+	mp3 := MProcess{Process: p3, Priority: 3}
+	mp4 := MProcess{Process: p4, Priority: 2}
+	mp5 := MProcess{Process: p5, Priority: 1}
+
+	tm.AddFIFO(mp1)
+	tm.AddFIFO(mp2)
+	tm.AddFIFO(mp3)
+	tm.AddFIFO(mp4)
+	tm.AddFIFO(mp5)
+
+	tt := []mTest{
+		{priority: 1, list: []*MProcess{&mp1, &mp2, &mp3, &mp4}},
+		{priority: 2, list: []*MProcess{&mp1, &mp3}},
+		{priority: 3, list: []*MProcess{}},
+	}
+	for _, test := range tt {
+		testName := fmt.Sprintf("%d", test.priority)
+		t.Run(testName, func(t *testing.T) {
+			_ = tm.KillByPriority(PriorityType(test.priority))
 			if !check(test.list, tm.ProcessList) {
 				t.Errorf("got %v, want %v", tm.ProcessList, test.list)
 			}
