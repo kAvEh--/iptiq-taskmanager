@@ -43,8 +43,12 @@ func main() {
 	//}
 
 	time.Sleep(time.Second * 2)
-	tm.Kill(mp1)
-	e := tm.Kill(mp1)
+	tm.KillAll()
+	e := tm.KillByPriority(1)
+	if e != nil {
+		fmt.Println(e)
+	}
+	e = tm.Kill(mp1)
 	if e != nil {
 		fmt.Println(e)
 	}

@@ -73,6 +73,13 @@ func (tm *TaskManager) KillByPriority(priority PriorityType) error {
 }
 
 func (tm *TaskManager) KillAll() error {
-
+	for i := 0; i < len(tm.ProcessList); i++ {
+		err := tm.ProcessList[i].Process.Kill()
+		if err != nil {
+			return err
+		}
+	}
+	tm.ProcessList = make([]*MProcess, 0)
+	fmt.Println("all processes deleted")
 	return nil
 }
