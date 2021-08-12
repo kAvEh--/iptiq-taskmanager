@@ -20,10 +20,10 @@ func TestTaskManager_Add(t *testing.T) {
 	tm := NewTaskManage(2)
 
 	p1, _ := start("echo", ">>>>> t1")
-	mp1 := MProcess{Process: p1, Priority: 1}
 	p2, _ := start("echo", ">>>>> t2")
-	mp2 := MProcess{Process: p2, Priority: 2}
 	p3, _ := start("echo", ">>>>> t3")
+	mp1 := MProcess{Process: p1, Priority: 1}
+	mp2 := MProcess{Process: p2, Priority: 2}
 	mp3 := MProcess{Process: p3, Priority: 3}
 
 	tt := []mTest{
@@ -56,10 +56,10 @@ func TestTaskManager_AddFIFO(t *testing.T) {
 	tm := NewTaskManage(2)
 
 	p1, _ := start("echo", ">>>>> t1")
-	mp1 := MProcess{Process: p1, Priority: 1}
 	p2, _ := start("echo", ">>>>> t2")
-	mp2 := MProcess{Process: p2, Priority: 2}
 	p3, _ := start("echo", ">>>>> t3")
+	mp1 := MProcess{Process: p1, Priority: 1}
+	mp2 := MProcess{Process: p2, Priority: 2}
 	mp3 := MProcess{Process: p3, Priority: 3}
 
 	tt := []mTest{
@@ -82,14 +82,14 @@ func TestTaskManager_AddPriority(t *testing.T) {
 	tm := NewTaskManage(2)
 
 	p1, _ := start("echo", ">>>>> t1")
-	mp1 := MProcess{Process: p1, Priority: 1}
 	p2, _ := start("echo", ">>>>> t2")
-	mp2 := MProcess{Process: p2, Priority: 2}
 	p3, _ := start("echo", ">>>>> t3")
-	mp3 := MProcess{Process: p3, Priority: 2}
 	p4, _ := start("echo", ">>>>> t4")
-	mp4 := MProcess{Process: p4, Priority: 2}
 	p5, _ := start("echo", ">>>>> t5")
+	mp1 := MProcess{Process: p1, Priority: 1}
+	mp2 := MProcess{Process: p2, Priority: 2}
+	mp3 := MProcess{Process: p3, Priority: 2}
+	mp4 := MProcess{Process: p4, Priority: 2}
 	mp5 := MProcess{Process: p5, Priority: 3}
 
 	tt := []mTest{
@@ -124,14 +124,14 @@ func TestTaskManager_List(t *testing.T) {
 	tm := NewTaskManage(5)
 
 	p1, _ := start("echo", ">>>>> t1")
-	mp1 := MProcess{Process: p1, Priority: 3}
 	p2, _ := start("echo", ">>>>> t2")
-	mp2 := MProcess{Process: p2, Priority: 2}
 	p3, _ := start("echo", ">>>>> t3")
-	mp3 := MProcess{Process: p3, Priority: 3}
 	p4, _ := start("echo", ">>>>> t4")
-	mp4 := MProcess{Process: p4, Priority: 2}
 	p5, _ := start("echo", ">>>>> t5")
+	mp1 := MProcess{Process: p1, Priority: 3}
+	mp2 := MProcess{Process: p2, Priority: 2}
+	mp3 := MProcess{Process: p3, Priority: 3}
+	mp4 := MProcess{Process: p4, Priority: 2}
 	mp5 := MProcess{Process: p5, Priority: 1}
 
 	tm.AddFIFO(mp1)
@@ -159,14 +159,14 @@ func TestTaskManager_Kill(t *testing.T) {
 	tm := NewTaskManage(5)
 
 	p1, _ := start("echo", ">>>>> t1")
-	mp1 := MProcess{Process: p1, Priority: 3}
 	p2, _ := start("echo", ">>>>> t2")
-	mp2 := MProcess{Process: p2, Priority: 2}
 	p3, _ := start("echo", ">>>>> t3")
-	mp3 := MProcess{Process: p3, Priority: 3}
 	p4, _ := start("echo", ">>>>> t4")
-	mp4 := MProcess{Process: p4, Priority: 2}
 	p5, _ := start("echo", ">>>>> t5")
+	mp1 := MProcess{Process: p1, Priority: 3}
+	mp2 := MProcess{Process: p2, Priority: 2}
+	mp3 := MProcess{Process: p3, Priority: 3}
+	mp4 := MProcess{Process: p4, Priority: 2}
 	mp5 := MProcess{Process: p5, Priority: 1}
 
 	tm.AddFIFO(mp1)
@@ -267,12 +267,10 @@ func TestTaskManager_KillAll(t *testing.T) {
 }
 
 func check(l1 []*MProcess, l2 []*MProcess) bool {
-	fmt.Println("*****", len(l1), len(l2))
 	if len(l1) != len(l2) {
 		return false
 	}
 	for i := 0; i < len(l1); i++ {
-		fmt.Println("----", l1[i].Process.Pid, l2[i].Process.Pid)
 		if l1[i].Process.Pid != l2[i].Process.Pid {
 			return false
 		}
