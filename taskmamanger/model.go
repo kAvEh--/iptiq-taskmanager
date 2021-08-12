@@ -19,7 +19,7 @@ type TaskManager struct {
 type ITaskManager interface {
 	Add(process MProcess) error
 	AddFIFO(process MProcess)
-	AddPriority(process MProcess)
+	AddPriority(process MProcess) error
 	List(sorting string) []*MProcess
 	Kill(process MProcess) error
 	KillByPriority(priority PriorityType) error

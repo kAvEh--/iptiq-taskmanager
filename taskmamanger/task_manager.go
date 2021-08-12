@@ -33,13 +33,34 @@ func (tm *TaskManager) AddFIFO(process MProcess) {
 		sort.Sort(ByTime(tm.ProcessList))
 		tm.ProcessList[0].Process.Kill()
 		tm.ProcessList = tm.ProcessList[1:]
+		return
 	}
 	process.time = time.Now()
 	tm.ProcessList = append(tm.ProcessList, &process)
 }
 
-func (tm *TaskManager) AddPriority(process MProcess) {
-
+func (tm *TaskManager) AddPriority(process MProcess) error {
+	process.time = time.Now()
+	if len(tm.ProcessList) >= tm.MaxCapacity {
+		indicator := 0
+		for i := 1; i < len(tm.ProcessList); i++ {
+			if tm.ProcessList[i].Priority < tm.ProcessList[indicator].Priority {
+				indicator = i
+			} else if tm.ProcessList[i].Priority == tm.ProcessList[indicator].Priority {
+				if tm.ProcessList[i].time.Unix() == tm.ProcessList[indicator].time.Unix() {
+					indicator = i
+				}
+			}
+		}
+		if tm.ProcessList[indicator].Priority < process.Priority {
+			tm.ProcessList = append(tm.ProcessList[:indicator], tm.ProcessList[indicator+1:]...)
+			tm.ProcessList = append(tm.ProcessList, &process)
+			return nil
+		}
+		return errors.New("no process found with lower priority")
+	}
+	tm.ProcessList = append(tm.ProcessList, &process)
+	return nil
 }
 
 func (tm *TaskManager) List(sorting string) []*MProcess {
@@ -63,7 +84,6 @@ func (tm *TaskManager) Kill(process MProcess) error {
 		if tm.ProcessList[i].Process.Pid == process.Process.Pid {
 			tm.ProcessList = append(tm.ProcessList[:i], tm.ProcessList[i+1:]...)
 			fmt.Println("process deleted")
-			return nil
 		}
 	}
 
