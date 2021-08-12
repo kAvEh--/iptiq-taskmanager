@@ -33,7 +33,6 @@ func (tm *TaskManager) AddFIFO(process MProcess) {
 		sort.Sort(ByTime(tm.ProcessList))
 		tm.ProcessList[0].Process.Kill()
 		tm.ProcessList = tm.ProcessList[1:]
-		return
 	}
 	process.time = time.Now()
 	tm.ProcessList = append(tm.ProcessList, &process)
