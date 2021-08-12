@@ -5,28 +5,30 @@ import (
 	"github.com/kAvEh--/iptiq-taskmanager/taskmamanger"
 	"os"
 	"os/exec"
-	"time"
 )
 
 func main() {
-	tm := taskmamanger.NewTaskManage()
+	tm := taskmamanger.NewTaskManage(2)
 
 	p1, _ := start("ping", "-c 1", "www.google.com")
-	//p2, _ := start("ping", "-c 1", "www.dell.com")
-	//p3, _ := start("ping", "-c 1", "www.microsoft.com")
+	p2, _ := start("ping", "-c 1", "www.dell.com")
+	p3, _ := start("ping", "-c 1", "www.microsoft.com")
 	mp1 := taskmamanger.MProcess{
 		Process:  p1,
 		Priority: 1,
 	}
 	tm.Add(mp1)
-	//tm.Add(taskmamanger.MProcess{
-	//	Process:  p3,
-	//	Priority: 2,
-	//})
-	//tm.Add(taskmamanger.MProcess{
-	//	Process:  p2,
-	//	Priority: 3,
-	//})
+	tm.Add(taskmamanger.MProcess{
+		Process:  p3,
+		Priority: 2,
+	})
+	e := tm.Add(taskmamanger.MProcess{
+		Process:  p2,
+		Priority: 3,
+	})
+	if e != nil {
+		fmt.Println(e)
+	}
 	//tmp := tm.List("priority")
 	//for i := 0; i < len(tmp); i++ {
 	//	fmt.Println(tmp[i].Process.Pid, tmp[i].Priority)
@@ -42,16 +44,16 @@ func main() {
 	//	fmt.Println(tmp[i].Process.Pid, tmp[i].Priority)
 	//}
 
-	time.Sleep(time.Second * 2)
-	tm.KillAll()
-	e := tm.KillByPriority(1)
-	if e != nil {
-		fmt.Println(e)
-	}
-	e = tm.Kill(mp1)
-	if e != nil {
-		fmt.Println(e)
-	}
+	//time.Sleep(time.Second * 2)
+	//tm.KillAll()
+	//e = tm.KillByPriority(1)
+	//if e != nil {
+	//	fmt.Println(e)
+	//}
+	//e = tm.Kill(mp1)
+	//if e != nil {
+	//	fmt.Println(e)
+	//}
 }
 
 func start(args ...string) (p *os.Process, err error) {

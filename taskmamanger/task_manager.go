@@ -18,9 +18,14 @@ func NewTaskManage(capacity int) *TaskManager {
 
 }
 
-func (tm *TaskManager) Add(process MProcess) {
+func (tm *TaskManager) Add(process MProcess) error {
+	if len(tm.ProcessList) >= tm.MaxCapacity {
+		return errors.New("maximum capacity reached")
+	}
 	process.time = time.Now()
 	tm.ProcessList = append(tm.ProcessList, &process)
+
+	return nil
 }
 
 func (tm *TaskManager) AddFIFO(process MProcess) {

@@ -17,7 +17,7 @@ type TaskManager struct {
 }
 
 type ITaskManager interface {
-	Add(process MProcess)
+	Add(process MProcess) error
 	AddFIFO(process MProcess)
 	AddPriority(process MProcess)
 	List(sorting string) []*MProcess
