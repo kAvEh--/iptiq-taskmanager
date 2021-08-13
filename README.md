@@ -29,16 +29,19 @@ go test -v ./..
 ```
 
 ### Implementation
--AddProcess
 
--AddProcess with FIFO approach
+List of functionality implemented in this repo:
 
--AddProcess Priority based approach
+-AddProcess: add a process to Task Manager`s list
 
--ListProcesses
+-AddProcess with FIFO approach: add a process to Task Manager`s list with FIFO approach
 
--KillProcess
+-AddProcess Priority based approach: add a process to Task Manager`s list priority based
 
--KillProcess by Priority
+-ListProcesses: return list of all processes
 
--KillAll Processes
+-KillProcess: kill a process and remove from list
+
+-KillProcess by Priority: kill all processes with specified priority
+
+-KillAll Processes: kill all processes in Task Manager`s list
